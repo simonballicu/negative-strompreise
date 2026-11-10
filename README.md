@@ -30,9 +30,12 @@ SMARD-API ──► raw ──► staging ──► mart ──► Modell
 - Ingestion idempotent (Upsert), mit Retry bei API-Fehlern
 
 ### Umstellung auf 15-Minuten-Auflösung
-Seit dem Liefertag 01.10.2025 wird der Day-Ahead-Markt in 15-Minuten-Produkten gehandelt. Für eine einheitliche Zeitreihe wird in `staging` auf Stunden aggregiert.
+Seit dem Liefertag 01.10.2025 wird der Day-Ahead-Markt in 15-Minuten-Produkten gehandelt. Für eine einheitliche Zeitreihe wird in `staging` auf Stunden aggregiert:
 
-> TODO: Aggregationsmethode final festlegen und hier dokumentieren (z. B. Preis = Mittelwert der vier Viertelstunden, Energiemengen = Summe; Definition des Labels bei gemischten Vorzeichen innerhalb einer Stunde).
+- **Preis:** Ab 01.10.2025 ist der Stundenpreis das arithmetische Mittel der vier Viertelstundenpreise.
+- **Label:** Eine Stunde gilt als negativ, wenn das Stundenmittel < 0 €/MWh ist.
+- **Begründung:** Das ist konsistent mit den stündlichen Preisen von 2023 bis 09/2025. Eine andere Definition (z. B. „mindestens eine Viertelstunde negativ“) würde einen künstlichen Bruch in der Zielvariable erzeugen.
+- **Robustheitscheck:** Zusätzlich wird ausgewertet, in wie vielen Stunden mindestens eine Viertelstunde negativ war.
 
 ## Modellierung
 - Baselines: Residuallast-Schwelle, logistische Regression

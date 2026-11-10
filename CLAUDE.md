@@ -18,7 +18,11 @@ Vorhersage negativer Day-Ahead-Strompreise in Deutschland. Öffentliches Portfol
 
 ## Feste Designentscheidungen
 - **Zeit:** Alle Zeitstempel in UTC speichern (`timestamptz`). Erst in der Analyse nach `Europe/Berlin` umrechnen (Zeitumstellung beachten: 23- bzw. 25-Stunden-Tage).
-- **15-Minuten-Umstellung:** Seit Liefertag 01.10.2025 ist der Day-Ahead-Markt auf 15-Minuten-Auflösung umgestellt. In `staging` wird auf Stunden aggregiert; die Methode wird in der README dokumentiert.
+- **15-Minuten-Umstellung:** Seit Liefertag 01.10.2025 ist der Day-Ahead-Markt auf 15-Minuten-Auflösung umgestellt. In `staging` wird auf Stunden aggregiert (dokumentiert in der README):
+  - Stundenpreis ab 01.10.2025 = arithmetisches Mittel der vier Viertelstundenpreise.
+  - Label: negativ = Stundenmittel < 0.
+  - Begründung: konsistent mit den Stundenpreisen 2023 bis 09/2025, sonst entsteht ein künstlicher Bruch in der Zielvariable.
+  - Robustheitscheck (später): Anzahl der Stunden, in denen mindestens eine Viertelstunde negativ war.
 - **Kein Datenleck:** Realisierte Werte und Preis-Lags < 24h sind **keine** Modell-Features (realisierte Werte nur für Analyse/Evaluation).
 - **Ingestion:** idempotent (Upsert über den PK von `raw.smard_observation`), Retry bei API-Fehlern, `logging` statt `print`.
 - **Schlank halten:** keine unnötigen Abstraktionen.
