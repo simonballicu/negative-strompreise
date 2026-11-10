@@ -1,0 +1,35 @@
+[project]
+name = "negative-strompreise"
+version = "0.1.0"
+description = "Vorhersage negativer Day-Ahead-Strompreise in Deutschland (SMARD-Daten, PostgreSQL, ML)"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "pandas",
+    "requests",
+    "sqlalchemy>=2",
+    "psycopg[binary]>=3",
+    "python-dotenv",
+]
+
+[dependency-groups]
+dev = [
+    "ruff",
+    "pytest",
+    "pre-commit",
+    "jupyter",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
